@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "name": "PHP2Shell",
+  "revision": "2026-10-22",
+  "disclosed": "2026-10-21",
+  "exploited_since": "2026-10-17",
+  "first_affected": "5.4.0",
+  "cves": [
+    {
+      "id": "CVE-2026-109618",
+      "ghsa": "GHSA-w8hw-w9fx-j79w",
+      "title": "Remote code execution via corrupted state after an out-of-memory error",
+      "cvss4": 9.2,
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w"
+    },
+    {
+      "id": "CVE-2026-109619",
+      "ghsa": "GHSA-6wmf-4rv5-p3rp",
+      "title": "Remote code execution via use-after-free of stale per-request state",
+      "cvss4": 9.2,
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp"
+    }
+  ],
+  "branches": [
+    { "branch": "8.5", "fixed": "8.5.12" },
+    { "branch": "8.4", "fixed": "8.4.27" },
+    { "branch": "8.3", "fixed": "8.3.36" },
+    { "branch": "8.2", "fixed": "8.2.35" },
+    { "branch": "8.1", "eol": true, "source_backport": true, "note": "No official release. The PHP security team published a minimal source backport for self-built PHP; vendors may ship patched packages." },
+    { "branch": "8.0", "eol": true, "source_backport": true, "note": "No official release. The PHP security team published a minimal source backport for self-built PHP; vendors may ship patched packages." },
+    { "branch": "7.4", "eol": true, "source_backport": true, "note": "No official release. The PHP security team published a minimal source backport for self-built PHP; vendors may ship patched packages." },
+    { "branch": "7.3", "eol": true, "note": "End of life. No fix from the PHP project; ask your distribution or LTS vendor, or upgrade." },
+    { "branch": "7.2", "eol": true, "note": "End of life. No fix from the PHP project; ask your distribution or LTS vendor, or upgrade." },
+    { "branch": "7.1", "eol": true, "note": "End of life. No fix from the PHP project; ask your distribution or LTS vendor, or upgrade." },
+    { "branch": "7.0", "eol": true, "note": "End of life. No fix from the PHP project; ask your distribution or LTS vendor, or upgrade." },
+    { "branch": "5.6", "eol": true, "note": "End of life. No fix from the PHP project; ask your distribution or LTS vendor, or upgrade." },
+    { "branch": "5.5", "eol": true, "note": "End of life. No fix from the PHP project; ask your distribution or LTS vendor, or upgrade." },
+    { "branch": "5.4", "eol": true, "note": "End of life. No fix from the PHP project; ask your distribution or LTS vendor, or upgrade." }
+  ],
+  "mitigations": [
+    "Upgrade to a fixed release and restart every PHP worker (php-fpm, Apache with mod_php, php-cgi, LiteSpeed, FrankenPHP). This is the only complete fix.",
+    "Interim, partial (CVE-2026-109619): set session.upload_progress.enabled=0, and on PHP 8.5 also fatal_error_backtraces=0. PHP states that no configuration change fully closes the vulnerability.",
+    "Interim, partial (CVE-2026-109618): set memory_limit=-1 so applications cannot override it, and enforce a container or cgroup memory limit as the availability boundary.",
+    "Stopgap only: restrict internet exposure of unpatched hosts and use WAF rules for known exploit vectors.",
+    "Exploitation was observed from 2026-10-17, before disclosure. Investigate for compromise from that date, not from the patch date."
+  ],
+  "references": [
+    { "title": "PHP security advisory (2026-10-21)", "url": "https://www.php.net/archive/2026.php#2026-10-21-5" },
+    { "title": "GHSA-w8hw-w9fx-j79w (CVE-2026-109618)", "url": "https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w" },
+    { "title": "GHSA-6wmf-4rv5-p3rp (CVE-2026-109619)", "url": "https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp" },
+    { "title": "PHP Foundation release post", "url": "https://thephp.foundation/blog/2026/10/21/todays-php-security-release-and-how-were-strengthening-php-security/" },
+    { "title": "NVD CVE-2026-109618", "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-109618" },
+    { "title": "NVD CVE-2026-109619", "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-109619" },
+    { "title": "CERT-EU security advisory 2026-018", "url": "https://cert.europa.eu/publications/security-advisories/2026-018/" },
+    { "title": "Amazon Threat Intelligence: exploitation before disclosure", "url": "https://aws.amazon.com/blogs/security/amazon-threat-intelligence-identifies-php2shell-exploitation-prior-to-public-disclosure-in-madpot/" }
+  ]
+}

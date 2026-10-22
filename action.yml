@@ -1,0 +1,52 @@
+name: php2shell check
+description: Check your websites for PHP2Shell (CVE-2026-109618, CVE-2026-109619) and fail the job when one is at risk.
+branding:
+  icon: shield
+  color: red
+
+inputs:
+  targets:
+    description: Websites to check, one per line.
+    required: true
+  args:
+    description: Extra arguments for `php2shell check`, e.g. "--deep --follow".
+    required: false
+    default: ""
+  format:
+    description: Report format (text, json, csv or sarif).
+    required: false
+    default: text
+  output:
+    description: Write the report to this file instead of the log.
+    required: false
+    default: ""
+  fail-on-unknown:
+    description: Also fail when a site's PHP version cannot be determined.
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-go@v5
+      with:
+        go-version-file: ${{ github.action_path }}/go.mod
+        cache: false
+    - shell: bash
+      env:
+        TARGETS: ${{ inputs.targets }}
+        ARGS: ${{ inputs.args }}
+        FORMAT: ${{ inputs.format }}
+        OUTPUT: ${{ inputs.output }}
+        FAIL_ON_UNKNOWN: ${{ inputs.fail-on-unknown }}
+      run: |
+        cd "${{ github.action_path }}" && go build -o "$RUNNER_TEMP/php2shell" ./cmd/php2shell && cd - >/dev/null
+        out=()
+        if [ -n "$OUTPUT" ]; then out=(--output "$OUTPUT"); fi
+        set +e
+        # shellcheck disable=SC2086
+        printf '%s\n' "$TARGETS" | "$RUNNER_TEMP/php2shell" check --targets - --format "$FORMAT" "${out[@]}" $ARGS
+        code=$?
+        set -e
+        if [ "$code" -eq 3 ] && [ "$FAIL_ON_UNKNOWN" != "true" ]; then exit 0; fi
+        exit "$code"

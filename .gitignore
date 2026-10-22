@@ -1,0 +1,6 @@
+/php2shell
+/php2shell.exe
+/dist/
+*.test
+*.out
+*.sarif
