@@ -2,7 +2,8 @@ name: release
 
 on:
   push:
-    tags: ["v*"]
+    # Full versions only; the moving major tag (v1) for the GitHub Action must not trigger a release.
+    tags: ["v*.*.*"]
 
 permissions:
   contents: write
